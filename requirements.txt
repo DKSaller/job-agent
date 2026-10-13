@@ -1,0 +1,8 @@
+pyyaml
+pandas
+requests
+python-dotenv
+anthropic
+pydantic
+pdfplumber
+pytest
