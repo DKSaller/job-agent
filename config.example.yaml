@@ -12,6 +12,14 @@ search:
     - "VP"
     - "Principal"
     - "Intern"
+    - "Senior"
+    - "Sr"
+    - "Lead"
+    - "Manager"
+    - "Head"
+    - "Staff"
+    - "Chief"
+    - "Architect"
   max_years_required: 3
   max_posting_age_days: 7
 
