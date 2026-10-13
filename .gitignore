@@ -1,0 +1,9 @@
+.venv/
+config.yaml
+.env
+data/
+*.sqlite
+*.db
+*.pdf
+.ipynb_checkpoints/
+__pycache__/

@@ -1,0 +1,40 @@
+search:
+  primary_titles:
+    - "Data Analyst"
+    - "Business Intelligence Analyst"
+    - "Technical Business Analyst"
+  adjacent_titles:
+    - "Reporting Analyst"
+    - "Operations Analyst"
+    - "Business Analyst"
+  exclude_title_keywords:
+    - "Director"
+    - "VP"
+    - "Principal"
+    - "Intern"
+  max_years_required: 3
+  max_posting_age_days: 7
+
+location:
+  home_city: "Anywhere, USA"
+  commute_radius_miles: 45
+  allow_remote: true
+  remote_us_only: true
+  allow_hybrid: true
+
+compensation:
+  min_salary: 80000
+  if_salary_missing: "include"   # include | exclude
+
+skills:
+  must_have: ["SQL"]
+  nice_to_have: ["Python", "pandas", "Tableau", "Power BI", "Excel"]
+
+deal_breakers:
+  - "commission only"
+  - "no experience necessary" 
+  - "purchase equipment"
+
+digest:
+  max_jobs: 10
+  min_fit_score: 60
