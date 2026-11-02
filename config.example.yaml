@@ -46,3 +46,7 @@ deal_breakers:
 digest:
   max_jobs: 10
   min_fit_score: 60
+
+scoring:
+  model: "claude-haiku-5-5"
+  max_jobs_per_run: 40
