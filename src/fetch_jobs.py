@@ -1,6 +1,6 @@
 import os
 import time
-
+import re
 import pandas as pd
 import requests
 from dotenv import load_dotenv
@@ -105,11 +105,38 @@ def apply_basic_filters(df, cfg):
 
     return df.reset_index(drop=True)
 
+def apply_title_filter(df, cfg):
+    """Keep titles with an analyst-type word; drop developer or off-domain titles."""
+    if df.empty:
+        return df, df
+
+    search = cfg["search"]
+    include = search.get("title_must_include_any", [])
+    exclude = search.get("title_exclude_any", [])
+
+    def pattern(words):
+        return r"\b(?:" + "|".join(re.escape(w) for w in words) + r")\b"
+
+    keep = pd.Series(True, index=df.index)
+    if include:
+        keep &= df["title"].str.contains(pattern(include), case=False, regex=True)
+    if exclude:
+        keep &= ~df["title"].str.contains(pattern(exclude), case=False, regex=True)
+
+    return df[keep].reset_index(drop=True), df[~keep].reset_index(drop=True)
 
 if __name__ == "__main__":
     cfg = load_config()
     raw = fetch_jobs(cfg)
     print(f"Fetched {len(raw)} unique jobs.")
+
     filtered = apply_basic_filters(raw, cfg)
-    print(f"{len(filtered)} remain after basic filters.\n")
-    print(filtered[["title", "company", "location", "salary_min"]].head(15).to_string())
+    print(f"{len(filtered)} remain after basic filters.")
+
+    kept, dropped = apply_title_filter(filtered, cfg)
+    print(f"{len(kept)} remain after title filter ({len(dropped)} dropped).\n")
+
+    print("--- Sample of DROPPED titles (check for good jobs lost) ---")
+    print(dropped["title"].value_counts().head(25).to_string())
+    print("\n--- Sample of KEPT titles ---")
+    print(kept["title"].value_counts().head(25).to_string())
