@@ -19,12 +19,35 @@ search:
     - "Head"
     - "Staff"
     - "Chief"
-    - "Architect"    
+    - "Architect"
+  title_must_include_any:
+    - "Analyst"
+    - "Analysts"
+    - "Analytics"
+    - "Analysis"
+    - "Business Intelligence"
+    - "BI"
+    - "Reporting"
+    - "Insights"
+    - "Data"
+  title_exclude_any:
+    - "Developer"
+    - "Software"
+    - "Full Stack"
+    - "Java"
+    - "SAP"
+    - "PeopleSoft"
+    - "Clearance"
+    - "Data Entry"
+    - "Administrator"
+    - "Admin"
+    - "Corrosion"
     - "Data Engineer"
     - "Data Scientist"
     - "Data Modeler"
     - "Volunteer"
-  max_years_required: 3
+    - "Engineer"
+  max_years_required: 5
   max_posting_age_days: 7
 
 location:
