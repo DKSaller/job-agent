@@ -1,0 +1,46 @@
+name: Daily job digest
+
+on:
+  schedule:
+    - cron: "0 12 * * *"
+  workflow_dispatch:
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Restore job database
+        uses: actions/cache@v4
+        with:
+          path: data/jobs.sqlite
+          key: jobs-db-${{ github.run_id }}
+          restore-keys: jobs-db-
+
+      - name: Write config and resume
+        env:
+          CONFIG_YAML: ${{ secrets.CONFIG_YAML }}
+          RESUME_TEXT: ${{ secrets.RESUME_TEXT }}
+        run: |
+          mkdir -p data
+          printf '%s' "$CONFIG_YAML" > config.yaml
+          printf '%s' "$RESUME_TEXT" > data/resume.txt
+
+      - name: Run job agent
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
+          ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
+          EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDRESS }}
+          EMAIL_APP_PASSWORD: ${{ secrets.EMAIL_APP_PASSWORD }}
+        run: python -m src.main
