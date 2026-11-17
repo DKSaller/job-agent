@@ -14,7 +14,7 @@ MILES_TO_KM = 1.609
 
 
 def _search_adzuna(what, where=None, distance_km=None, max_days=7, remote_only=False):
-    """Run one Adzuna search and return the raw list of results."""
+    """Run one Adzuna search with retries and return the raw list of results."""
     params = {
         "app_id": os.getenv("ADZUNA_APP_ID"),
         "app_key": os.getenv("ADZUNA_APP_KEY"),
@@ -31,10 +31,22 @@ def _search_adzuna(what, where=None, distance_km=None, max_days=7, remote_only=F
     if remote_only:
         params["what_and"] = "remote"
 
-    resp = requests.get(BASE_URL, params=params, timeout=30)
-    resp.raise_for_status()
-    return resp.json().get("results", [])
+    last_error = "unknown error"
+    for attempt in range(4):
+        try:
+            resp = requests.get(BASE_URL, params=params, timeout=30)
+        except requests.RequestException as e:
+            last_error = type(e).__name__
+        else:
+            if resp.status_code == 200:
+                return resp.json().get("results", [])
+            last_error = f"HTTP {resp.status_code}"
+            if resp.status_code not in (429, 500, 502, 503, 504):
+                break  # retrying won't help (bad key, bad request)
+        time.sleep(2 ** attempt)
 
+    # Deliberately omit the URL: it contains the API key
+    raise requests.RequestException(f"Adzuna request failed: {last_error}")
 
 def _normalize(raw_job, source="adzuna"):
     """Convert one Adzuna result into our standard job format."""

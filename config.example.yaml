@@ -19,7 +19,11 @@ search:
     - "Head"
     - "Staff"
     - "Chief"
-    - "Architect"
+    - "Architect"    
+    - "Data Engineer"
+    - "Data Scientist"
+    - "Data Modeler"
+    - "Volunteer"
   max_years_required: 3
   max_posting_age_days: 7
 
