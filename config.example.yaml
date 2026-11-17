@@ -72,7 +72,7 @@ deal_breakers:
 
 digest:
   max_jobs: 10
-  min_fit_score: 60
+  min_fit_score: 55
 
 scoring:
   model: "claude-haiku-5-5"
